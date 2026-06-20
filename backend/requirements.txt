@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+faster-whisper
+imageio-ffmpeg
+-e ../supertonic/py
+requests
+python-multipart
+aiofiles
+deep-translator
+numpy
+yt-dlp
+nvidia-cublas-cu12
+nvidia-cudnn-cu12
+demucs
+soundfile

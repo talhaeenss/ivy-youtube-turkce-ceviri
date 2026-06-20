@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Supertonic 3 - Web Demo</title>
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>🎤 Supertonic 3</h1>
+            <p class="subtitle">31-language Text-to-Speech with ONNX Runtime Web</p>
+
+            <div id="statusBox" class="status-box">
+                <div class="status-text-wrapper">
+                    <div id="statusText">ℹ️ <strong>Loading models...</strong>
+                        Please wait...</div>
+                </div>
+                <div id="backendBadge" class="backend-badge">WebAssembly</div>
+            </div>
+
+            <div class="main-content">
+                <div class="left-panel">
+                    <div class="section">
+                        <div class="ref-audio-label">
+                            <label for="voiceStyleSelect">Voice Style: </label>
+                            <span id="voiceStyleInfo"
+                                class="ref-audio-info">Loading...</span>
+                        </div>
+                        <select id="voiceStyleSelect">
+                            <option value="assets/voice_styles/M1.json">Male 1 (M1)</option>
+                            <option value="assets/voice_styles/M2.json">Male 2 (M2)</option>
+                            <option value="assets/voice_styles/M3.json">Male 3 (M3)</option>
+                            <option value="assets/voice_styles/M4.json">Male 4 (M4)</option>
+                            <option value="assets/voice_styles/M5.json">Male 5 (M5)</option>
+                            <option value="assets/voice_styles/F1.json">Female 1 (F1)</option>
+                            <option value="assets/voice_styles/F2.json">Female 2 (F2)</option>
+                            <option value="assets/voice_styles/F3.json">Female 3 (F3)</option>
+                            <option value="assets/voice_styles/F4.json">Female 4 (F4)</option>
+                            <option value="assets/voice_styles/F5.json">Female 5 (F5)</option>
+                        </select>
+                    </div>
+
+                    <div class="section">
+                        <label for="langSelect">Language:</label>
+                        <select id="langSelect">
+                            <option value="en" selected>English (en)</option>
+                            <option value="ko">한국어 (ko)</option>
+                            <option value="ja">日本語 (ja)</option>
+                            <option value="ar">العربية (ar)</option>
+                            <option value="bg">Bulgarian (bg)</option>
+                            <option value="cs">Czech (cs)</option>
+                            <option value="da">Danish (da)</option>
+                            <option value="de">Deutsch (de)</option>
+                            <option value="el">Greek (el)</option>
+                            <option value="es">Español (es)</option>
+                            <option value="et">Estonian (et)</option>
+                            <option value="fi">Finnish (fi)</option>
+                            <option value="fr">Français (fr)</option>
+                            <option value="hi">Hindi (hi)</option>
+                            <option value="hr">Croatian (hr)</option>
+                            <option value="hu">Hungarian (hu)</option>
+                            <option value="id">Indonesian (id)</option>
+                            <option value="it">Italian (it)</option>
+                            <option value="lt">Lithuanian (lt)</option>
+                            <option value="lv">Latvian (lv)</option>
+                            <option value="nl">Dutch (nl)</option>
+                            <option value="pl">Polish (pl)</option>
+                            <option value="pt">Português (pt)</option>
+                            <option value="ro">Romanian (ro)</option>
+                            <option value="ru">Russian (ru)</option>
+                            <option value="sk">Slovak (sk)</option>
+                            <option value="sl">Slovenian (sl)</option>
+                            <option value="sv">Swedish (sv)</option>
+                            <option value="tr">Turkish (tr)</option>
+                            <option value="uk">Ukrainian (uk)</option>
+                            <option value="vi">Vietnamese (vi)</option>
+                        </select>
+                    </div>
+
+                    <div class="section">
+                        <label for="text">Text to Synthesize:</label>
+                        <textarea id="text"
+                            placeholder="Enter the text you want to convert to speech...">This morning, I took a walk in the park, and the sound of the birds and the breeze was so pleasant that I stopped for a long time just to listen.</textarea>
+                    </div>
+
+                    <div class="params-grid">
+                        <div class="section">
+                            <label for="totalStep">Total Steps (higher = better
+                                quality):</label>
+                            <input type="number" id="totalStep" value="8"
+                                min="1" max="50">
+                        </div>
+                        
+                        <div class="section">
+                            <label for="speed">Speed (0.9-1.5 recommended):</label>
+                            <input type="number" id="speed" value="1.05"
+                                min="0.5" max="2.0" step="0.05">
+                        </div>
+
+                    </div>
+
+                    <button id="generateBtn">Generate Speech</button>
+
+                    <div id="error" class="error"></div>
+                </div>
+
+                <div class="right-panel">
+                    <div id="results" class="results">
+                        <div class="results-placeholder">
+                            <div class="results-placeholder-icon">🎤</div>
+                            <p>Generated speech will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="/main.js"></script>
+    </body>
+</html>

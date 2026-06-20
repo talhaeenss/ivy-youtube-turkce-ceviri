@@ -1,0 +1,15 @@
+# Swift Package Manager
+.build/
+.swiftpm/
+*.xcodeproj
+*.xcworkspace
+
+# Build artifacts
+example_onnx
+
+# Results
+results/*.wav
+
+# macOS
+.DS_Store
+

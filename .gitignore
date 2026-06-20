@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual Environment
+venv/
+env/
+.venv/
+.env/
+
+# Whisper Model Cache
+*.pt
+*.bin
+huggingface/
+.cache/
+
+# ffmpeg alias (transcribe.py tarafından oluşturulur)
+_ffmpeg_alias/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary / Build output
+*.tmp
+*.temp
+*.log
+yt_tr_dub_*/
+
+# Edge TTS / ses çıktıları
+*.mp3
+*.wav
+
+# Video çıktıları (dublaj sonuçları)
+*.mp4
+*.webm
+*.mkv
+
+# Environment variables
+.env
+.env.local
+
+# Gemini/AI
+.gemini/
+.agent/
+.agents/

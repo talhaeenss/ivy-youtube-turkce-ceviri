@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YouTube TR Çeviri — Web Panel</title>
+  <link rel="icon" href="/favicon.ico" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Chivo+Mono:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* LIGHT THEME (Default) */
+      --bg: #fafafa;
+      --card-bg: #ffffff;
+      --border: #e4e4e7;
+      --border-focus: #a1a1aa;
+      --text: #09090b;
+      --muted: #71717a;
+      --accent: #e11d48; /* Vermilion */
+      --accent-hover: #be123c;
+      --accent-muted: rgba(225, 29, 72, 0.1);
+      --danger: #ef4444;
+      --danger-bg: #fef2f2;
+      --radius: 2px;
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-mono: 'Chivo Mono', monospace;
+      --shadow: 4px 4px 0px 0px rgba(0,0,0,0.05);
+      --shadow-hover: 6px 6px 0px 0px rgba(0,0,0,0.08);
+      --grid-color: rgba(0, 0, 0, 0.03);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        /* DARK THEME */
+        --bg: #09090b;
+        --card-bg: #121214;
+        --border: #27272a;
+        --border-focus: #52525b;
+        --text: #fafafa;
+        --muted: #a1a1aa;
+        --accent: #f43f5e;
+        --accent-hover: #fb7185;
+        --accent-muted: rgba(244, 63, 94, 0.15);
+        --danger: #f87171;
+        --danger-bg: rgba(248, 113, 113, 0.1);
+        --shadow: 4px 4px 0px 0px rgba(255,255,255,0.03);
+        --shadow-hover: 6px 6px 0px 0px rgba(255,255,255,0.06);
+        --grid-color: rgba(255, 255, 255, 0.02);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-display);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      /* Precise Studio Background Grid */
+      background-image: 
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 32px 32px;
+      transition: background-color 0.1s ease, color 0.1s ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 20px 32px;
+    }
+
+    h1 {
+      font-size: 1.95rem;
+      font-weight: 800;
+      letter-spacing: -2.3px;
+      margin: 0 0 16px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      text-transform: uppercase;
+    }
+    
+    h1 span:last-child::after {
+      content: '.';
+      color: var(--accent); /* Changed from --primary to --accent */
+      margin-left: 0px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    /* Inputs */
+    input[type="text"], input[type="url"], input[type="number"], select {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      transition: border-color 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--card-bg);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    select option {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    input[type="file"] {
+      width: 100%;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding: 8px 0;
+    }
+
+    input[type="file"]::file-selector-button {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-weight: 600;
+      padding: 8px 16px;
+      margin-right: 16px;
+      cursor: pointer;
+      transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    /* Layout */
+    .row { margin-bottom: 12px; }
+    .row:last-child { margin-bottom: 0; }
+    
+    .row-flex {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .grid2 { grid-template-columns: 1fr; gap: 16px; }
+      .wrap { padding: 40px 20px 60px; }
+      h1 { font-size: 1.6rem; }
+    }
+
+    /* Tabs (Architectural logic) */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .tabs button {
+      padding: 8px 16px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: color 0.1s ease;
+      position: relative;
+    }
+
+    .tabs button:hover {
+      color: var(--text);
+    }
+
+    .tabs button.active {
+      color: var(--text);
+    }
+    
+    .tabs button.active::after {
+      content: "";
+      position: absolute;
+      bottom: -9px; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .hidden { display: none !important; }
+
+    /* Button */
+    .btn {
+      width: 100%;
+      padding: 14px 24px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: #ffffff;
+      transition: transform 0.05s cubic-bezier(0, 1.4, 1, 1), background 0.1s ease;
+      box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn { box-shadow: 4px 4px 0px 0px rgba(255,255,255,1); }
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .btn:hover { box-shadow: 6px 6px 0px 0px rgba(255,255,255,1); }
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px 0px rgba(0,0,0,1) !important;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .btn:active { box-shadow: 2px 2px 0px 0px rgba(255,255,255,1) !important; }
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: 4px 4px 0px 0px rgba(100,100,100,0.5) !important;
+      background: var(--muted);
+      color: var(--bg);
+    }
+
+    /* Progress */
+    .progress {
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: none;
+    }
+
+    .progress.on { display: block; animation: powerOn 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 16px;
+    }
+
+    .progress-meta #progressLabel {
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .progress-meta #progressPct {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .progress-track {
+      height: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.1s linear;
+    }
+
+    /* Error */
+    .err {
+      margin-top: 24px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: var(--danger-bg);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .err.on { display: block; }
+
+    /* Video & Actions */
+    video {
+      width: 100%;
+      background: #000;
+      margin-top: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .actions a {
+      flex: 1;
+      min-width: 160px;
+      text-align: center;
+      padding: 16px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: var(--card-bg);
+      color: var(--text);
+      box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.05);
+      transition: transform 0.05s ease, box-shadow 0.05s ease;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .actions a { box-shadow: 2px 2px 0px 0px rgba(255,255,255,0.03); }
+    }
+
+    .actions .dl {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    .actions a:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.1);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .actions a:hover { box-shadow: 4px 4px 0px 0px rgba(255,255,255,0.1); }
+    }
+
+    .actions a:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.1) !important;
+    }
+
+    .muted-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    
+    .muted-note code {
+      background: var(--bg);
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .json-link {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      margin-top: 24px;
+      color: var(--muted);
+      line-height: 2;
+    }
+
+    .json-link a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.1s;
+      border-bottom: 1px dotted var(--muted);
+    }
+
+    .json-link a:hover { color: var(--text); border-bottom-style: solid; }
+
+    /* Banners */
+    #fileProtoWarn, #staticServerWarn {
+      font-size: 0.9rem;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      box-shadow: var(--shadow);
+    }
+    
+    #fileProtoWarn { border-left-color: var(--danger); }
+
+    #fileProtoWarn code, #staticServerWarn code {
+      background: var(--bg);
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+    }
+
+    @keyframes powerOn {
+      from { opacity: 0; transform: scaleY(0.9); }
+      to { opacity: 1; transform: scaleY(1); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <p id="fileProtoWarn" class="hidden"
+      style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);padding:12px;border-radius:8px;margin-bottom:16px;font-size:.9rem;">
+      Bu sayfayı <strong>dosyadan</strong> açmışsınız (<code>file://</code>). İstekler sunucuya gitmez → 404 olur.
+      Tarayıcıda şunu açın: <a href="http://127.0.0.1:8000/" style="color:#a5b4fc">http://127.0.0.1:8000/</a> (önce
+      <code>run-local.bat</code>).
+    </p>
+    <p id="staticServerWarn" class="hidden"
+      style="background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.45);padding:14px;border-radius:8px;margin-bottom:16px;font-size:.9rem;line-height:1.5;">
+      <strong>Bu adreste FastAPI çalışmıyor gibi.</strong> Sayfa açılıyor ama <code>/api/...</code> hep 404 ise sebep
+      genelde şu:<br />
+      Portta <strong>statik sunucu</strong> var (<code>python -m http.server</code>, VS Code Live Server, başka araç). O
+      sadece HTML verir; POST API yoktur.<br />
+      <strong>Ne yapmalı:</strong> Tüm o sunucuları kapatın. Proje kökünden <code>run-local.bat</code> çalıştırın.
+      CMD’de <code>Uvicorn running on http://0.0.0.0:...</code> görmelisiniz. Paneli <strong>aynı porttan</strong> açın
+      (adres çubuğunda bu sekmenin portu ile bat’ın yazdığı port aynı olsun).<br />
+      Test: <a id="probePingLink" href="/__yt_tr_ping" target="_blank" rel="noopener"
+        style="color:#a5b4fc">/__yt_tr_ping</a> → JSON <code>"youtube-tr-ceviri-backend"</code> olmalı. Yoksa bu portta
+      FastAPI yok.
+    </p>
+    <h1>
+      <span>VİDEOLARINI</span>
+      <span>YAPAY</span>
+      <span>ZEKA</span>
+      <span>İLE</span>
+      <span>TÜRKÇE</span>
+      <span style="position: relative;">SESLENDİR</span>
+    </h1>
+
+    <div class="card">
+      <h2>Kaynak</h2>
+      <div class="tabs">
+        <button type="button" id="tabFile" class="active">Dosya yükle</button>
+        <button type="button" id="tabUrl">YouTube / bağlantı</button>
+      </div>
+      <div id="paneFile">
+        <div class="row">
+          <label for="videoFile">Video dosyası</label>
+          <input type="file" id="videoFile" accept="video/*,.mp4,.webm,.mkv,.mov" />
+        </div>
+      </div>
+      <div id="paneUrl" class="hidden">
+        <div class="row">
+          <label for="videoUrl">Video URL (YouTube veya doğrudan dosya bağlantısı)</label>
+          <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Dublaj ayarları</h2>
+      <div class="grid2">
+        <div class="row" style="display: none;">
+          <label for="rate">TTS konuşma hızı</label>
+          <select id="rate">
+            <option value="-20%">Yavaş (-20%)</option>
+            <option value="-10%">Hafif yavaş (-10%)</option>
+            <option value="+0%" selected>Normal (+0%)</option>
+            <option value="+20%">Hafif hızlı (+20%)</option>
+            <option value="+40%">Önerilen (+40%)</option>
+            <option value="+60%">Hızlı (+60%)</option>
+            <option value="+80%">Çok hızlı (+80%)</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="useDemucs">Ses Ayırma (Demucs)</label>
+          <select id="useDemucs">
+            <option value="false" selected>Demucs kullanmadan (varsayılan)</option>
+            <option value="true">Demucs (Ses ayırma) modu</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="targetLang">Hedef Dil</label>
+          <select id="targetLang">
+            <option value="tr" selected>Türkçe (tr)</option>
+            <option value="en">İngilizce (en)</option>
+            <option value="de">Almanca (de)</option>
+            <option value="fr">Fransızca (fr)</option>
+            <option value="es">İspanyolca (es)</option>
+            <option value="it">İtalyanca (it)</option>
+            <option value="ko">Korece (ko)</option>
+            <option value="ja">Japonca (ja)</option>
+            <option value="ru">Rusça (ru)</option>
+            <option value="ar">Arapça (ar)</option>
+          </select>
+        </div>
+        <div class="row" style="display: flex; align-items: center; gap: 10px; margin-top: 15px;">
+          <input type="checkbox" id="autoExpressions" style="width: 20px; height: 20px; cursor: pointer;" />
+          <label for="autoExpressions" style="margin-bottom: 0; cursor: pointer;">Doğal İfadeleri Otomatik Ekle (Nefes/Gülüş/İç Çekiş)</label>
+        </div>
+        <div class="row-flex">
+          <div class="row" style="flex: 2; margin-bottom: 0;">
+            <label for="voice">Türkçe ses</label>
+            <select id="voice">
+              <option value="M1" selected>Erkek 1 (M1)</option>
+              <option value="M2">Erkek 2 (M2)</option>
+              <option value="M3">Erkek 3 (M3)</option>
+              <option value="M4">Erkek 4 (M4)</option>
+              <option value="M5">Erkek 5 (M5)</option>
+              <option value="F1">Kadın 1 (F1)</option>
+              <option value="F2">Kadın 2 (F2)</option>
+              <option value="F3">Kadın 3 (F3)</option>
+              <option value="F4">Kadın 4 (F4)</option>
+              <option value="F5">Kadın 5 (F5)</option>
+            </select>
+          </div>
+          <div class="row" style="flex: 1; margin-bottom: 0;">
+            <label for="videoSpeed">Hızlandırma</label>
+            <select id="videoSpeed">
+              <option value="1.0" selected>Normal (%0)</option>
+              <option value="1.2">+%20</option>
+              <option value="1.4">+%40</option>
+              <option value="1.6">+%60</option>
+              <option value="1.8">+%80</option>
+              <option value="2.0">+%100</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="row">
+          <label for="whisperModel">Yapay Zeka Modeli (Çeviri Kalitesi)</label>
+          <select id="whisperModel">
+            <option value="small">Small (Hızlı, İyi Kalite — ~1 GB VRAM)</option>
+            <option value="medium" selected>Medium (Dengeli, Mükemmel Kalite — ~2.5 GB VRAM)</option>
+            <option value="large-v3">Large-v3 (Yavaş, Üstün Kalite — ~6 GB VRAM)</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="chunk">Ses parça süresi (saniye) — 12–60</label>
+          <input type="number" id="chunk" min="12" max="60" value="28" />
+          <p class="muted-note" style="margin-top: 5px;">Küçük = daha sık kesim, Büyük = daha az istek.</p>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn" id="btnStart">Başlat</button>
+    <div class="progress" id="progressWrap">
+      <div class="progress-meta">
+        <span id="progressLabel">—</span>
+        <span id="progressPct">%0</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+    <div class="err" id="err"></div>
+
+    <div class="card hidden" id="resultCard">
+      <h2>Çıktı</h2>
+      <video id="preview" controls playsinline></video>
+      <div class="actions">
+        <a class="dl" id="btnDl" href="#" download="dublaj.mp4">Bilgisayara indir</a>
+      </div>
+    </div>
+
+    <div class="json-link">
+      <a href="/api/info" target="_blank" rel="noopener">API bilgisi</a>
+      &nbsp;&nbsp;·&nbsp;&nbsp;
+      <a href="/api/routes-debug" target="_blank" rel="noopener">Yüklü rotalar (404 ayıklama)</a>
+      &nbsp;&nbsp;·&nbsp;&nbsp;
+      <a href="/docs" target="_blank" rel="noopener">Swagger</a>
+      <br />
+      <span style="color: var(--text);">talhaeens</span> &nbsp;&nbsp;•&nbsp;&nbsp; <a href="https://talhaeens-ivy.netlify.app/" target="_blank" rel="noopener">https://talhaeens-ivy.netlify.app/</a>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const LS = {
+      rate: "yt_tr_rate",
+      voice: "yt_tr_voice",
+      chunk: "yt_tr_chunk",
+      model: "yt_tr_model",
+      demucs: "yt_tr_demucs",
+      vSpeed: "yt_tr_vspeed",
+      tab: "yt_tr_tab",
+      targetLang: "yt_tr_target_lang",
+      autoExpressions: "yt_tr_auto_expressions",
+    };
+
+    function loadSettings() {
+      // Migration: eski varsayılan +40% veya +20% kayıtlıysa +0%'ye güncelle (İsteğe bağlı, temiz bir başlangıç için)
+      if (localStorage.getItem(LS.rate) === "+40%" || localStorage.getItem(LS.rate) === "+20%") {
+        localStorage.setItem(LS.rate, "+0%");
+      }
+      const r = localStorage.getItem(LS.rate);
+      if (r && $(`rate option[value="${r}"]`)) $("rate").value = r;
+      const v = localStorage.getItem(LS.voice);
+      if (v && $(`voice option[value="${v}"]`)) $("voice").value = v;
+      const c = localStorage.getItem(LS.chunk);
+      if (c) $("chunk").value = c;
+      let m = localStorage.getItem(LS.model);
+      if (!m || !["small", "medium", "large-v3"].includes(m)) m = "medium";
+      if ($(`whisperModel option[value="${m}"]`)) $("whisperModel").value = m;
+      const d = localStorage.getItem(LS.demucs);
+      if (d !== null) $("useDemucs").value = d;
+      const vs = localStorage.getItem(LS.vSpeed);
+      if (vs !== null) $("videoSpeed").value = vs;
+      const tl = localStorage.getItem(LS.targetLang);
+      if (tl && $(`targetLang option[value="${tl}"]`)) $("targetLang").value = tl;
+      const ae = localStorage.getItem(LS.autoExpressions);
+      if (ae !== null) $("autoExpressions").checked = ae === "true";
+      const t = localStorage.getItem(LS.tab);
+      if (t === "url") setTab("url");
+    }
+
+    function saveSettings() {
+      localStorage.setItem(LS.rate, $("rate").value);
+      localStorage.setItem(LS.voice, $("voice").value);
+      localStorage.setItem(LS.chunk, $("chunk").value);
+      localStorage.setItem(LS.model, $("whisperModel").value);
+      localStorage.setItem(LS.demucs, $("useDemucs").value);
+      localStorage.setItem(LS.vSpeed, $("videoSpeed").value);
+      localStorage.setItem(LS.targetLang, $("targetLang").value);
+      localStorage.setItem(LS.autoExpressions, $("autoExpressions").checked);
+    }
+
+    function setTab(which) {
+      const file = which === "file";
+      $("tabFile").classList.toggle("active", file);
+      $("tabUrl").classList.toggle("active", !file);
+      $("paneFile").classList.toggle("hidden", !file);
+      $("paneUrl").classList.toggle("hidden", file);
+      localStorage.setItem(LS.tab, file ? "file" : "url");
+    }
+
+    $("tabFile").addEventListener("click", () => setTab("file"));
+    $("tabUrl").addEventListener("click", () => setTab("url"));
+
+    ["rate", "voice", "chunk", "whisperModel", "useDemucs", "videoSpeed", "targetLang", "autoExpressions"].forEach((id) => {
+      $(id).addEventListener("change", saveSettings);
+    });
+
+    let lastBlobUrl = null;
+
+    function revokeLast() {
+      if (lastBlobUrl) {
+        URL.revokeObjectURL(lastBlobUrl);
+        lastBlobUrl = null;
+      }
+    }
+
+    /** Yerel: her zaman bu sekmenin sunucusu (goreli yol). */
+    function apiUrl(subpath) {
+      const p = subpath.startsWith("/") ? subpath : "/" + subpath;
+      return p;
+    }
+
+    function setProgressUI(pct, label) {
+      const p = Math.max(0, Math.min(100, Number(pct) || 0));
+      $("progressFill").style.width = p + "%";
+      $("progressPct").textContent = "%" + p;
+      $("progressLabel").textContent = label || "…";
+    }
+
+    let pollTimer = null;
+
+    function stopPoll() {
+      if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+    }
+
+    $("btnStart").addEventListener("click", async () => {
+      saveSettings();
+      stopPoll();
+      $("err").classList.remove("on");
+      $("err").textContent = "";
+      $("progressWrap").classList.add("on");
+      setProgressUI(0, "İş kuyruğa alınıyor…");
+      $("btnStart").disabled = true;
+      revokeLast();
+      $("resultCard").classList.add("hidden");
+      $("preview").removeAttribute("src");
+
+      let ch = parseInt($("chunk").value, 10);
+      if (Number.isNaN(ch)) ch = 28;
+
+      const fileMode = $("tabFile").classList.contains("active");
+      let startUrl;
+      /** @type {RequestInit} */
+      let fetchOpts;
+
+      if (fileMode) {
+        const f = $("videoFile").files[0];
+        if (!f) {
+          $("err").textContent = "Lütfen bir video dosyası seçin.";
+          $("err").classList.add("on");
+          $("progressWrap").classList.remove("on");
+          $("btnStart").disabled = false;
+          return;
+        }
+        const form = new FormData();
+        form.append("file", f, f.name);
+        form.append("rate", $("rate").value);
+        form.append("voice", $("voice").value);
+        form.append("chunk_seconds", String(ch));
+        form.append("whisper_model", $("whisperModel").value);
+        form.append("use_demucs", $("useDemucs").value);
+        form.append("video_speed", $("videoSpeed").value);
+        form.append("target_lang", $("targetLang").value);
+        form.append("auto_expressions", $("autoExpressions").checked ? "true" : "false");
+        startUrl = apiUrl("/api/dub/start-upload");
+        fetchOpts = { method: "POST", body: form };
+      } else {
+        const u = $("videoUrl").value.trim();
+        if (!u) {
+          $("err").textContent = "Lütfen bir bağlantı girin.";
+          $("err").classList.add("on");
+          $("progressWrap").classList.remove("on");
+          $("btnStart").disabled = false;
+          return;
+        }
+        startUrl = apiUrl("/api/dub/start-url");
+        fetchOpts = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            video_url: u,
+            rate: $("rate").value,
+            voice: $("voice").value,
+            chunk_seconds: ch,
+            whisper_model: $("whisperModel").value,
+            use_demucs: $("useDemucs").value === "true",
+            video_speed: parseFloat($("videoSpeed").value),
+            target_lang: $("targetLang").value,
+            auto_expressions: $("autoExpressions").checked,
+          }),
+        };
+      }
+
+      try {
+        const res = await fetch(startUrl, fetchOpts);
+        if (!res.ok) {
+          let msg = `Sunucu hatası (${res.status})`;
+          try {
+            const j = await res.json();
+            if (j.detail) {
+              msg = typeof j.detail === "string" ? j.detail : JSON.stringify(j.detail);
+            }
+          } catch (_) {
+            try {
+              msg = (await res.text()).trim() || msg;
+            } catch (__) { }
+          }
+          if (res.status === 404) {
+            const tam = new URL(startUrl, window.location.href).href;
+            msg =
+              "404 Not Found\nDenenen: " +
+              tam +
+              "\n\nSunucuyu durdurup run-local.bat ile acin. Su adresi tarayicida acin: " +
+              new URL(apiUrl("/api/routes-debug"), window.location.href).href;
+          }
+          throw new Error(msg);
+        }
+        const { job_id: jobId } = await res.json();
+        if (!jobId) throw new Error("Sunucu job_id dönmedi.");
+
+        /** @returns {Promise<boolean>} true = indirme tamam */
+        const pollOnce = async () => {
+          const stRes = await fetch(apiUrl(`/api/jobs/${jobId}`));
+          if (!stRes.ok) throw new Error("İş durumu alınamadı.");
+          const st = await stRes.json();
+          setProgressUI(st.percent, st.message);
+          if (st.status === "error") {
+            throw new Error(st.error || st.message || "Bilinmeyen hata");
+          }
+          if (st.status === "done") {
+            stopPoll();
+            const dlRes = await fetch(apiUrl(`/api/jobs/${jobId}/download`));
+            if (!dlRes.ok) {
+              let dm = "İndirme başarısız.";
+              try {
+                const dj = await dlRes.json();
+                if (dj.detail) dm = typeof dj.detail === "string" ? dj.detail : JSON.stringify(dj.detail);
+              } catch (_) { }
+              throw new Error(dm);
+            }
+            const blob = await dlRes.blob();
+            if (!blob.size) throw new Error("Boş video dosyası.");
+            lastBlobUrl = URL.createObjectURL(blob);
+            $("preview").src = lastBlobUrl;
+            $("btnDl").href = lastBlobUrl;
+            $("btnDl").download = "dublaj.mp4";
+            $("resultCard").classList.remove("hidden");
+            setProgressUI(100, "Tamamlandı.");
+            return true;
+          }
+          return false;
+        };
+
+        const firstDone = await pollOnce();
+        if (!firstDone) {
+          pollTimer = setInterval(() => {
+            pollOnce()
+              .then((done) => {
+                if (done) $("btnStart").disabled = false;
+              })
+              .catch((e) => {
+                stopPoll();
+                $("err").textContent = e.message || String(e);
+                $("err").classList.add("on");
+                $("btnStart").disabled = false;
+              });
+          }, 450);
+        } else {
+          $("btnStart").disabled = false;
+        }
+      } catch (e) {
+        stopPoll();
+        $("err").textContent = e.message || String(e);
+        $("err").classList.add("on");
+        $("progressWrap").classList.remove("on");
+        $("btnStart").disabled = false;
+      }
+    });
+
+    if (window.location.protocol === "file:") {
+      $("fileProtoWarn").classList.remove("hidden");
+    }
+
+    loadSettings();
+
+    async function probeFastApi() {
+      if (window.location.protocol === "file:") return;
+      const ping = apiUrl("/__yt_tr_ping");
+      try {
+        const r = await fetch(ping, { method: "GET", cache: "no-store" });
+        if (!r.ok) return false;
+        const ct = (r.headers.get("content-type") || "").toLowerCase();
+        if (!ct.includes("application/json")) return false;
+        const j = await r.json();
+        return j.service === "youtube-tr-ceviri-backend" && j.ok === true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    (async () => {
+      let ok = false;
+      for (let i = 0; i < 10; i++) {
+        ok = await probeFastApi();
+        if (ok) break;
+        await new Promise((r) => setTimeout(r, 500));
+      }
+      if (!ok && window.location.protocol !== "file:") {
+        $("staticServerWarn").classList.remove("hidden");
+        const a = $("probePingLink");
+        if (a) a.href = new URL(apiUrl("/__yt_tr_ping"), window.location.href).href;
+      }
+    })();
+  </script>
+</body>
+
+</html>
